@@ -16,7 +16,7 @@ app.use( morgan( morgan['tiny'] + ' :content'))
 
 
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
+  response.status(404).send({ error: 'unknown endpoint' })
 }
 
 const errorHandler = (error, request, response, next) => {
@@ -24,16 +24,16 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
   }
-    if (error.name === 'ValidationError') {
-        return response.status(400).send({error: error.errors})
-    }
+  if (error.name === 'ValidationError') {
+    return response.status(400).send({ error: error.errors })
+  }
   next(error)
 }
 
 app.get('/api/persons', (request, response) => {
   Number.find().then(persons => {
     response.json(persons)
-  }).catch(error => console.log)
+  }).catch(error => console.log(error))
 })
 
 app.get('/api/persons/:id', (request, response, next) => {
@@ -41,7 +41,7 @@ app.get('/api/persons/:id', (request, response, next) => {
   Number.findById(id).then(result => {
     if (result) response.json(result)
     else response.status(404).end()
-  }).catch(error=> next(error))
+  }).catch(error => next(error))
 })
 
 app.get('/info', (request, response) => {
@@ -49,16 +49,16 @@ app.get('/info', (request, response) => {
     const date = Date()
     const content = `<p>Phonebook has info for ${result} people</p><p>${date.toString()}</p`
     response.send(content)
-  }).catch(error => console.log)
+  }).catch(error => console.log(error))
 })
 
 app.post('/api/persons', (request, response, next) => {
   const body = request.body
-/*  Number.find().then(persons => {
+  /*  Number.find().then(persons => {
 
     if (!body.name) {
       return response.status(400).json({
-        error: 'name is  missing' 
+        error: 'name is  missing'
       })
     }
 
@@ -73,15 +73,15 @@ app.post('/api/persons', (request, response, next) => {
         error: 'name must be unique'
       })
     }
-*/
-    const person = new Number({
-      name: body.name,
-      number: body.number,
-    })
+  */
+  const person = new Number({
+    name: body.name,
+    number: body.number,
+  })
 
-    person.save()
-        .then(savedNumber => response.json(savedNumber))
-        .catch(error => next(error))
+  person.save()
+    .then(savedNumber => response.json(savedNumber))
+    .catch(error => next(error))
 })
 
 app.put('/api/persons/:id', (request, response, next) => {
@@ -90,7 +90,7 @@ app.put('/api/persons/:id', (request, response, next) => {
   Number.findByIdAndUpdate(id, newNumber, { new: true }).then(result => {
     response.json(result)
   })
-  .catch(error => next(error))
+    .catch(error => next(error))
 
 })
 
